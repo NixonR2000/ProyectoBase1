@@ -1,110 +1,149 @@
-import { useAuth } from "@/contexts/AuthContext"; // Importa el contexto de autenticación
-import { useRouter } from "expo-router"; // Importa el enrutador para la navegación
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"; // Importa componentes de React Native
-import { Ionicons } from "@expo/vector-icons"; // Importa iconos de la librería de Expo
-
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "expo-router";
 export default function ProfileScreen() {
-  const { user, logout } = useAuth(); // Obtiene el usuario y la función de cierre de sesión del contexto de autenticación
-  const router = useRouter(); // Inicializa el enrutador
+    const router = useRouter();
+    const { logout } = useAuth();
+    return (
 
-  // Función para cerrar sesión y redirigir al usuario a la pantalla de inicio de sesión
-  const handleLogout = () => {
-    logout();
-    router.replace("/login");
-  };
+// codigo para limpiar estado en cambio de tabs
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         return () => setNombre('');
+    //     }, [])
+    // );
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-  return (
-    <View style={styles.container}>
-      {/* Muestra la imagen de perfil del usuario o una imagen predeterminada */}
-      <Image 
-        source={user?.profilePic ? { uri: user.profilePic } : require("../../assets/images/profilepic.jpg")} 
-        style={styles.avatar} 
-      />
-      
-      {/* Muestra el nombre y correo del usuario */}
-      <Text style={styles.name}>{user?.name || "Usuario"}</Text>
-      <Text style={styles.email}>{user?.email || "email@example.com"}</Text>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Image
+                        source={require("../../assets/images/profilepic.jpg")}
+                        style={styles.avatar}
+                    />
+                    <Text style={styles.name}>Juan Pérez</Text>
+                    <Text style={styles.email}>juan.perez@example.com</Text>
+                </View>
 
-      {/* Contenedor con información adicional del usuario */}
-      <View style={styles.infoBox}>
-        <Text style={styles.infoText}><Ionicons name="person" size={16} color="#4C6EF5" /> @{user?.username || "NixonRosales"}</Text>
-        <Text style={styles.infoText}><Ionicons name="location" size={16} color="#4C6EF5" /> {user?.location || "San Pedro Sula"}</Text>
-        <Text style={styles.infoText}><Ionicons name="calendar" size={16} color="#4C6EF5" /> Miembro desde {user?.memberSince || "2025"}</Text>
-      </View>
+                <View style={styles.infoContainer}>
+                    <View style={styles.infoRow}>
+                        <Ionicons name="person" size={24} color="#4C6EF5" />
+                        <Text style={styles.infoText}>@juanperez</Text>
+                    </View>
 
-      {/* Botón para editar el perfil */}
-      <TouchableOpacity style={styles.editButton}>
-        <Text style={styles.buttonText}>Editar Perfil</Text>
-      </TouchableOpacity>
+                    <View style={styles.infoRow}>
+                        <Ionicons name="location" size={24} color="#4C6EF5" />
+                        <Text style={styles.infoText}>Ciudad de México</Text>
+                    </View>
 
-      {/* Botón para cerrar sesión */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.buttonText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
-    </View>
-  );
+                    <View style={styles.infoRow}>
+                        <Ionicons name="calendar" size={24} color="#4C6EF5" />
+                        <Text style={styles.infoText}>Miembro desde 2022</Text>
+                    </View>
+                </View>
+
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.buttonEdit} onPress={() => alert("Editar perfil")}>
+                        <Ionicons name="create" size={20} color="white" />
+                        <Text style={styles.buttonText}>Editar Perfil</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.buttonLogout}
+                        onPress={() => { logout(); router.replace("/login"); }}
+                    >
+                        <Ionicons name="log-out" size={20} color="white" />
+                        <Text style={styles.buttonText}>Cerrar Sesión</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </ScrollView>
+
+    );
 }
 
-// Estilos para los componentes de la pantalla de perfil
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 30,
-    backgroundColor: "#F5F7FA",
-  },
-  avatar: {
-    height: 130,
-    width: 130,
-    borderRadius: 65,
-    borderWidth: 2,
-    borderColor: "#4C6EF5",
-    marginBottom: 20,
-  },
-  name: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginTop: 15,
-    marginBottom: 10,
-  },
-  email: {
-    fontSize: 18,
-    color: "gray",
-    marginBottom: 20,
-  },
-  infoBox: {
-    marginTop: 20,
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    width: "90%",
-  },
-  infoText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  editButton: {
-    backgroundColor: "#4A90E2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  logoutButton: {
-    backgroundColor: "#E74C3C",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
+    scrollContainer: {
+        flexGrow: 1,
+        alignItems: "center",
+        paddingVertical: 20,
+    },
+    container: {
+        flex: 1,
+        backgroundColor: "#f4f4f4",
+        alignItems: "center",
+        padding: 20,
+    },
+    header: {
+        alignItems: "center",
+        marginVertical: 20,
+    },
+    avatar: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 3,
+        borderColor: "#4C6EF5",
+    },
+    name: {
+        fontSize: 22,
+        fontWeight: "bold",
+        marginTop: 10,
+    },
+    email: {
+        fontSize: 16,
+        color: "gray",
+    },
+    infoContainer: {
+        backgroundColor: "white",
+        width: "100%",
+        padding: 15,
+        borderRadius: 10,
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 2, height: 2 },
+        shadowRadius: 5,
+    },
+    infoRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 8,
+    },
+    infoText: {
+        fontSize: 16,
+        marginLeft: 10,
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+        width: "100%",
+    },
+    buttonEdit: {
+        flexDirection: "row",
+        backgroundColor: "#4C6EF5",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+        alignItems: "center",
+        flex: 1,
+        marginRight: 10,
+    },
+    buttonLogout: {
+        flexDirection: "row",
+        backgroundColor: "#FF4C4C",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+        alignItems: "center",
+        flex: 1,
+        marginLeft: 10,
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 16,
+        marginLeft: 10,
+    },
 });
+
