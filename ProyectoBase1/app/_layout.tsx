@@ -1,11 +1,21 @@
-import { AuthProvider } from "@/contexts/AuthContext";
-import { Stack } from "expo-router";
-
+import { Stack } from 'expo-router';
+import { AuthProvider } from '../contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 export default function RootLayout() {
     return (
-        <AuthProvider>
-            <Stack />
-        </AuthProvider>
-    )
+        <ThemeProvider>
+            <AuthProvider>
+                <LanguageProvider>
+                    <Stack
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    />
+                </LanguageProvider>
+            </AuthProvider>
+        </ThemeProvider>
+
+    );
 }
