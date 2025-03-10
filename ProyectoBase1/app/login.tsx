@@ -3,19 +3,24 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@/contexts/ThemeContext";
+import { darkTheme, lightTheme } from "@/styles/themes";
+import { i18n } from "@/contexts/LanguageContext";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const router = useRouter();
   const { login } = useAuth();
+  const { theme } = useTheme();
+  const themeStyles = theme === "dark" ? darkTheme : lightTheme;
 
   return (
-    <View style={styles.container}>
+    <View style={[themeStyles.container, styles.container]}>
       <Image
         source={require("../assets/images/profilepic.jpg")}
         style={styles.avatar}
       />
-      <Text style={styles.title}>Bienvenido</Text>
+      <Text style={themeStyles.title}>{i18n.t("welcome")}</Text>
 
       <TextInput
         style={styles.input}
@@ -38,6 +43,11 @@ export default function LoginScreen() {
         />
         <Text style={styles.buttonText}>Ingresar con Google</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push("/register")}>
+        <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
@@ -48,7 +58,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#F5F7FA",
   },
   avatar: {
     height: 120,
@@ -57,13 +66,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#4C6EF5",
   },
-    title: {
+  title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#2D2E32",
     textAlign: "center",
   },
+  linkText: { marginTop: 10, color: "#007bff", textDecorationLine: "underline" },
   input: {
     width: "100%",
     height: 50,
